@@ -1,6 +1,16 @@
 import React, { useRef, useEffect } from "react";
 
-function addAxis(ref: HTMLCanvasElement, height: number, width: number): void {
+type PlottingFunction = (ctx: CanvasRenderingContext2D, width: number, height: number) => void
+
+interface graphProps {
+    height: number;
+    width: number;
+    style: React.CSSProperties;
+    plotLine: PlottingFunction
+}
+
+function addAxis(ref: HTMLCanvasElement, height: number, width: number,
+    plotLine: PlottingFunction): void {
 
     // assert canvas context is not null as react promises component is mounted
     let ctx = ref.getContext("2d")!;
@@ -15,7 +25,6 @@ function addAxis(ref: HTMLCanvasElement, height: number, width: number): void {
 
     ctx.lineWidth = 1
     ctx.strokeStyle = "#b281ff";
-    ctx.stroke();
 
     // add x axis ticks and labels
     for (let x = 0; x <= 7; x++) {
@@ -36,14 +45,17 @@ function addAxis(ref: HTMLCanvasElement, height: number, width: number): void {
         ctx.fillStyle = "white"
         ctx.fillText(String(1 - 0.5 * y), 5, y * ((height - 20) / 4) + 13)
     }
+    ctx.stroke();
+
+    plotLine(ctx, width, height)
 
 }
 
-function Graph(props: any): JSX.Element {
+function Graph(props: graphProps): JSX.Element {
     const localref = useRef<HTMLCanvasElement | null>(null)
     useEffect((): void => {
         if (!localref.current) throw Error("localref is not assigned");
-        addAxis(localref.current, props.height, props.width);
+        addAxis(localref.current, props.height, props.width, props.plotLine);
     })
 
     return <canvas ref={localref} height={props.height} width={props.width} style={props.style} />
