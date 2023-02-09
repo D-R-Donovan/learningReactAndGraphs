@@ -9,7 +9,7 @@ function App() {
         <p>
           Sine Graph
         </p>
-        <Graph height={400} width={500} style={{border:"1px solid #999"}}/>
+        <Graph height={400} width={500} style={{border:"1px solid white"}}/>
       </header>
     </div>
   );
