@@ -16,13 +16,19 @@ const sineWave = (ctx: CanvasRenderingContext2D, width: number, height: number):
 }
 
 function App(): JSX.Element {
+  const graphStyle: React.CSSProperties = {
+    imageRendering: "auto",
+    width: 500,
+    height: 400,
+    padding: 10
+  }
   return (
     <div className="App">
       <header className="App-header">
         <p>
           Sine Graph
         </p>
-        <Graph height={400} width={500} style={{border:"1px solid white"}} plotLine={sineWave}/>
+        <Graph height={400} width={500} style={graphStyle} plotLine={sineWave}/>
       </header>
     </div>
   );

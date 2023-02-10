@@ -9,11 +9,17 @@ interface graphProps {
     plotLine: PlottingFunction
 }
 
-function addAxis(ref: HTMLCanvasElement, height: number, width: number,
+function graphSetup(ref: HTMLCanvasElement, height: number, width: number,
     plotLine: PlottingFunction): void {
 
     // assert canvas context is not null as react promises component is mounted
     let ctx = ref.getContext("2d")!;
+
+    let dpr = window.devicePixelRatio || 1;
+    let dimensions = ref.getBoundingClientRect()
+    ref.height = dimensions.height
+    ref.width = dimensions.width
+    ctx.scale(dpr,dpr)
 
     // vertical axis lines
     ctx.moveTo(15, 10);
@@ -55,7 +61,7 @@ function Graph(props: graphProps): JSX.Element {
     const localref = useRef<HTMLCanvasElement | null>(null)
     useEffect((): void => {
         if (!localref.current) throw Error("localref is not assigned");
-        addAxis(localref.current, props.height, props.width, props.plotLine);
+        graphSetup(localref.current, props.height, props.width, props.plotLine);
     })
 
     return <canvas ref={localref} height={props.height} width={props.width} style={props.style} />
