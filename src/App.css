@@ -1,6 +1,5 @@
 .App {
   text-align: center;
-  background-color: #272822;
 }
 
 .App-header {
@@ -15,4 +14,17 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.Flexdiv {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 400px;
+}
+
+.graphStyle {
+  image-rendering: "auto";
+  flex: 1;
+  border: "1px solid white";
 }

@@ -1,38 +1,38 @@
 import React from 'react';
+
 import './App.css';
 import Graph from './Graph';
 
-const sineWave = (ctx: CanvasRenderingContext2D, width: number, height: number): void => {
-  ctx.beginPath()
-  ctx.strokeStyle = "#3eb8ff"
-  ctx.moveTo(15, height / 2)
-  for (let x = 15; x < width - 10; x++) {
+const sineWave = (ctx: CanvasRenderingContext2D, width: number, height: number, padding: number): void => {
+  ctx.beginPath();
+  let freq = 2;
+  let graphHeight = (height / 2) - padding;
+  ctx.strokeStyle = "#3eb8ff";
+  ctx.moveTo(padding, 0);
+  for (let x = padding; x < (width - padding); x++) {
     if (x % 3 === 0) {
-      let y = (height / 2) - (((height - 20) / 2) * Math.sin(((x - 15) * 2 * Math.PI) * (2 / (width - 25))))
-      ctx.lineTo(x, y)
+      let y = -graphHeight * Math.sin(2 * Math.PI * (x - padding) * (freq / (width - 2 * padding)));
+      ctx.lineTo(x, y);
     }
   }
-  ctx.stroke()
+  ctx.stroke();
 }
 
 function App(): JSX.Element {
-  const graphStyle: React.CSSProperties = {
-    imageRendering: "auto",
-    width: 500,
-    height: 400,
-    padding: 10
-  }
+  //const graphStyle: React.CSSProperties = styles.graphStyle;
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          Sine Graph
-        </p>
-        <Graph height={400} width={500} style={graphStyle} plotLine={sineWave}/>
+        <div className="Flex-div">
+          <p>
+            Sine Graph
+          </p>
+          <Graph height={400} width={500} className="graphStyle" plotLine={sineWave} />
+        </div>
       </header>
     </div>
   );
 }
 
- 
+
 export default App;

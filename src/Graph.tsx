@@ -5,7 +5,7 @@ type PlottingFunction = (ctx: CanvasRenderingContext2D, width: number, height: n
 interface graphProps {
     height: number;
     width: number;
-    style: React.CSSProperties;
+    className: string;
     plotLine: PlottingFunction;
 }
 
@@ -94,7 +94,7 @@ function Graph(props: graphProps): JSX.Element {
         graphSetup(localref.current, props.plotLine);
     })
 
-    return <canvas ref={localref} style={props.style} />
+    return <canvas ref={localref} className={props.className} />
 }
 
 export default Graph;
