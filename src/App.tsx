@@ -19,7 +19,6 @@ const sineWave = (ctx: CanvasRenderingContext2D, width: number, height: number, 
 }
 
 function App(): JSX.Element {
-  //const graphStyle: React.CSSProperties = styles.graphStyle;
   return (
     <div className="App">
       <header className="App-header">

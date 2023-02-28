@@ -1,0 +1,20 @@
+.Header {
+    position: fixed;
+    top: 0;
+    height: 50px;
+    width: 100vw;
+    display: grid;
+    grid-template-areas: "title nav";
+    background-color: #686b61;
+    font-size: 25px;
+    text-align: left;
+    vertical-align: middle;
+    color: #f99afd;
+}
+
+.Nav-Toggle {
+    height: 50px;
+    width: 60px;
+    background-color: #686b61;
+    border: 0;
+}
