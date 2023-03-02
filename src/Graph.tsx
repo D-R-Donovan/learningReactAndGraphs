@@ -94,7 +94,7 @@ function Graph(props: graphProps): JSX.Element {
         graphSetup(localref.current, props.plotLine);
     })
 
-    return <canvas ref={localref} className={props.className} />
+    return <canvas ref={localref} className={props.className} height={props.height} width={props.width}/>
 }
 
 export default Graph;

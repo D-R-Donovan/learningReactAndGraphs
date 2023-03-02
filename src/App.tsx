@@ -19,6 +19,12 @@ const sineWave = (ctx: CanvasRenderingContext2D, width: number, height: number, 
 }
 
 function App(): JSX.Element {
+  let width;
+  if (window.innerWidth > 900) {
+    width = 900
+  } else {
+    width = window.innerWidth - (window.innerWidth / 20);
+  }
   return (
     <div className="App">
       <header className="App-header">
@@ -26,7 +32,7 @@ function App(): JSX.Element {
           <p>
             Sine Graph
           </p>
-          <Graph height={400} width={500} className="graphStyle" plotLine={sineWave} />
+          <Graph height={width * 0.4} width={width} className="graphStyle" plotLine={sineWave} />
         </div>
       </header>
     </div>

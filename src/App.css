@@ -24,7 +24,9 @@
 }
 
 .graphStyle {
-  image-rendering: "auto";
+  image-rendering: auto;
   flex: 1;
-  border: "1px solid white";
+  border-width: 1px;
+  border-style: solid;
+  border-color: white;
 }
