@@ -12,3 +12,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.top-grid {
+  display:grid;
+  grid-template-areas:
+    'Header'
+    'App'
+    'Footer'
+  ;
+  gap: 10px;
+}

@@ -1,11 +1,11 @@
 import './Header.css'
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 
-export function Header(){
+export function Header() {
     const [isNavOpen, setNavOpen] = useState(false);
-    
-    function siteNav(){
+
+    function siteNav() {
         setNavOpen(!isNavOpen);
     }
     return (
@@ -13,7 +13,7 @@ export function Header(){
             <button onClick={siteNav} className="Nav-Toggle">
                 🍔
             </button>
-            D-R-Donovan
+            <span className='Title'>D-R-Donovan</span>
             <nav></nav>
         </header>
     )

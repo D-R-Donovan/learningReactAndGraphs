@@ -10,8 +10,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Header />
-    <App />
+    <div className='top-grid'>
+      <Header />
+      <App />
+    </div>
   </React.StrictMode>
 );
 

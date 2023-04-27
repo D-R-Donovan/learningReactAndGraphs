@@ -1,4 +1,4 @@
-.Header {
+/* .Header {
     position: fixed;
     top: 0;
     height: 50px;
@@ -7,13 +7,29 @@
     grid-template-areas: "title nav";
     background-color: #686b61;
     font-size: 25px;
+    line-height: 45px;
     text-align: left;
-    vertical-align: middle;
+    display: inline-grid;    
     color: #f99afd;
+} */
+
+.Header {
+    position: fixed;
+    grid-area: Header;    
+    height: 55px;
+    width: 100vw;
+    text-align: left;
+    background-color: #686b61;
+}
+
+.Title {
+    vertical-align: middle;
+    font-size: 25px;
+    color: lightsalmon;
 }
 
 .Nav-Toggle {
-    height: 50px;
+    height: inherit;
     width: 60px;
     background-color: #686b61;
     border: 0;
