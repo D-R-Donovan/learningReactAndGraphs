@@ -1,55 +1,81 @@
 import React, { useRef, useEffect } from "react";
 
-type PlottingFunction = (ctx: CanvasRenderingContext2D, width: number, height: number, padding: number) => void
+type LinePlottingFunction = (ctx: CanvasRenderingContext2D, width: number, height: number, padding: number) => void;
+type AxisPlottingFunction = (ctx: CanvasRenderingContext2D, width: number, height: number, padding: number | undefined) => void;
 
 interface graphProps {
     height: number;
     width: number;
     className: string;
-    plotLine: PlottingFunction;
+    plotLine: LinePlottingFunction;
+    plotAxis?: AxisPlottingFunction;
+    padding?: number;
+    translate?: string | [number, number];
+    xRange?: [number, number];
+    yRange?: [number, number];
+    intervalX?: number;
+    intervalY?: number;
+    unitsX?: string;
+    unitsY?: string;
 }
 
+//TODO: investgate possibilty of wrapping canvas functions so above can be ignored outside of this class
+function Graph(props: graphProps): JSX.Element {
+    const localref = useRef<HTMLCanvasElement | null>(null);
+    useEffect((): void => {
+        if (!localref.current) throw Error("localref is not assigned");
+        let ref = localref.current;
+        let padding = props.padding === undefined ? 20 : props.padding;
+        let ctx: CanvasRenderingContext2D = ref.getContext("2d")!;
 
-/**
- * Adds axis and unit markings/labels, and deals with CSS pixel -> real pixel conversion 
- * 
- * Beware, gaph coords =/= canvas coords. The edge of the canvas is reserved to avoid clipping 
- * TODO: investgate possibilty of wrapping canvas functions so above can be ignored outside of this class
- * 
- * @param ref 
- * @param plotLine 
- */
-function graphSetup(ref: HTMLCanvasElement, plotLine: PlottingFunction): void {
+        ctx.setTransform(1,0,0,1,0,0);
+        ctx.clearRect(0, -ref.height, ref.width, 2 * ref.height);
 
-    // assert canvas context is not null as react promises component is mounted
-    let ctx = ref.getContext("2d")!;
+        // find device pixel density and CSS pixel difference 
+        let dpr = window.devicePixelRatio || 1;
 
-    ctx.clearRect(0, 0, ref.width, ref.height);
+        // change canvas origin to be in middle of canvas
+            if (!props.translate) {
+            } else if (Array.isArray(props.translate)) {
+                ctx.translate(props.translate[0], props.translate[1]);
+            } else if (props.translate === "center") {
+                ctx.translate(ref.width / 2, ref.height / 2)
+            } else if (props.translate === "midLeft") {
+                ctx.translate(0, ref.height / 2);
+            } else {
+                throw Error("translation argument is unrecognised")
+            }
 
-    // find device pixel density and CSS pixel difference 
-    let dpr = window.devicePixelRatio || 1;
-    let dimensions = ref.getBoundingClientRect();
-    ref.height = dimensions.height;
-    ref.width = Math.floor(dimensions.width);
+        if (!props.plotAxis) {
+            axisSetup(ctx, padding, ref.width, ref.height, props.xRange, props.yRange, props.intervalX, props.intervalY, props.unitsX, props.unitsY);
+        } else {
+            props.plotAxis(ctx, ref.width, ref.height, padding);
+        }
 
+        props.plotLine(ctx, ref.width, ref.height, padding);
+
+        // scale CSS pixel to device pixel
+        ctx.scale(dpr, dpr);;
+    })
+
+    return <canvas ref={localref} className={props.className} height={props.height} width={props.width} />
+}
+
+function axisSetup(ctx: CanvasRenderingContext2D, padding: number, width: number, height: number,
+    xRange: [number, number] | undefined, yRange: [number, number] | undefined, intervalX: number = 1, intervalY: number = 1, unitsX: string = "", unitsY: string = "") {
+
+    ctx.beginPath()
     ctx.lineWidth = 1
     ctx.strokeStyle = "#b281ff";
     ctx.textAlign = "center"
     ctx.fillStyle = "white"
 
-    // change canvas origin to be in middle of canvas
-    ctx.translate(0, ref.height / 2);
+    let minGraphX = padding;
+    let maxGraphX = width - padding;
 
-    // TODO: test if variable graph offsets needed for different displays
-    // if yes axis labels & tick marks offset may need changing too
-    let minGraphX = 20
-    let maxGraphX = ref.width - 20;
-    //let width = ref.width
-
-    let halfHeight = ref.height / 2;
-    let minGraphY = -halfHeight + 20
-    let maxGraphY = halfHeight - 20;
-
+    let halfHeight = height / 2;
+    let minGraphY = -halfHeight + padding;
+    let maxGraphY = halfHeight - padding;
 
     // vertical axis lines
     ctx.moveTo(minGraphX, minGraphY);
@@ -59,14 +85,13 @@ function graphSetup(ref: HTMLCanvasElement, plotLine: PlottingFunction): void {
     ctx.moveTo(minGraphX, 0);
     ctx.lineTo(maxGraphX, 0);
 
-
     ctx.font = "13px Arial"
     for (let x = 0; x <= 8; x++) {
         const xPos = (x * ((maxGraphX - minGraphX) / 8)) + minGraphX;
         ctx.moveTo(xPos, + 5)
         ctx.lineTo(xPos, - 5)
 
-        ctx.fillText(String(x / 4) + "π", xPos, 20)
+        ctx.fillText(String(x / 4) + unitsX, xPos, 20)
     }
 
 
@@ -74,27 +99,12 @@ function graphSetup(ref: HTMLCanvasElement, plotLine: PlottingFunction): void {
     for (let y = 0; y <= 4; y++) {
         const yPos = (-1 + 0.5 * y) * maxGraphY;
 
-        ctx.moveTo(15, yPos)
-        ctx.lineTo(20, yPos)
-        
-        ctx.fillText(String(1 - 0.5 * y), 10, yPos + 13)
+        ctx.moveTo(padding - 5, yPos)
+        ctx.lineTo(padding, yPos)
+
+        ctx.fillText(String(1 - 0.5 * y) + unitsY, 10, yPos + 13)
     }
     ctx.stroke();
-
-    plotLine(ctx, ref.width, ref.height, 20);
-
-    // scale CSS pixel to device pixel
-    ctx.scale(dpr, dpr);
-}
-
-function Graph(props: graphProps): JSX.Element {
-    const localref = useRef<HTMLCanvasElement | null>(null)
-    useEffect((): void => {
-        if (!localref.current) throw Error("localref is not assigned");
-        graphSetup(localref.current, props.plotLine);
-    })
-
-    return <canvas ref={localref} className={props.className} height={props.height} width={props.width}/>
 }
 
 export default Graph;
