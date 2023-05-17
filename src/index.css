@@ -17,6 +17,7 @@ code {
   display:grid;
   grid-template-areas:
     'Header'
+    'Intro'
     'App'
     'Footer'
   ;
