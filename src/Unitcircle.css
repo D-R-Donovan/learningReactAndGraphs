@@ -1,0 +1,14 @@
+.Intro {
+    grid-area: 'Intro';
+    padding-right: 2%;
+    padding-left: 2%;
+    text-align: center;
+    width: 90%;
+}
+
+.Triangle {
+    image-rendering: auto;
+    border-width: 1px;
+    border-style: solid;
+    border-color: white;
+}
